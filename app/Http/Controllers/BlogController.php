@@ -7,19 +7,29 @@ use App\Models\Post;
 
 class BlogController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil 3 artikel teratas untuk Hero Section
-        $heroPosts = Post::latest()->take(3)->get();
+        $selectedCategory = $request->query('category');
 
-        $featuredPost  = $heroPosts->get(0); // Artikel utama terbesar (Lg: 5/12)
-        $highlightPost = $heroPosts->get(1); // Artikel Quote/Top Post (Lg: 3/12)
-        $secondaryPost = $heroPosts->get(2); // Artikel sekunder (Lg: 4/12)
+        $query = Post::latest();
+        if ($selectedCategory && in_array($selectedCategory, ['Teknologi', 'Gaya Hidup', 'Edukasi', 'Bisnis', 'Kreatif'])) {
+            $query->where('category', $selectedCategory);
+        }
 
-        // Ambil artikel untuk grid main content
-        $tutorialPosts = Post::latest()->skip(3)->take(6)->get();
+        $allPosts = $query->get();
 
-        // Ambil artikel untuk sidebar (Latest/Popular)
+        if ($selectedCategory) {
+            $featuredPost  = null;
+            $highlightPost = null;
+            $secondaryPost = null;
+            $tutorialPosts = $allPosts;
+        } else {
+            $featuredPost  = $allPosts->get(0);
+            $highlightPost = $allPosts->get(1);
+            $secondaryPost = $allPosts->get(2);
+            $tutorialPosts = $allPosts->skip(3)->take(6);
+        }
+
         $sidebarPosts = Post::latest()->take(5)->get();
 
         return view('blog.index', compact(
@@ -27,7 +37,8 @@ class BlogController extends Controller
             'highlightPost',
             'secondaryPost',
             'tutorialPosts',
-            'sidebarPosts'
+            'sidebarPosts',
+            'selectedCategory'
         ));
     }
 

@@ -14,6 +14,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
+
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -45,13 +47,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
 
             <!-- Branding BagusdevBlog -->
-            <a href="/" class="flex items-center space-x-3 group">
-                <div class="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-black text-xl shadow-md shadow-indigo-200 group-hover:scale-105 transition">
-                    B
-                </div>
-                <span class="text-xl font-extrabold tracking-tight text-slate-900">
-                    Bagusdev<span class="text-indigo-600">Blog</span>
-                </span>
+            <a href="/" class="flex items-center group">
+                <img src="{{ asset('images/logo.png') }}" alt="BagusdevBlog Logo" class="h-10 w-auto group-hover:scale-[1.02] transition duration-200">
             </a>
 
             <!-- Navigation Bar -->
@@ -91,11 +88,12 @@
         <!-- CATEGORIES SECTION -->
         <div class="flex items-center space-x-3 overflow-x-auto pb-4 scrollbar-none">
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400 mr-2">Topik:</span>
-            <a href="#" class="px-4 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-full shadow-sm hover:shadow-md transition">Semua</a>
-            <a href="#" class="px-4 py-1.5 bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 text-xs font-semibold rounded-full border border-slate-200 transition">Laravel</a>
-            <a href="#" class="px-4 py-1.5 bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 text-xs font-semibold rounded-full border border-slate-200 transition">Tailwind CSS</a>
-            <a href="#" class="px-4 py-1.5 bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 text-xs font-semibold rounded-full border border-slate-200 transition">Filament PHP</a>
-            <a href="#" class="px-4 py-1.5 bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 text-xs font-semibold rounded-full border border-slate-200 transition">Docker</a>
+            <a href="{{ route('blog.index') }}" class="px-4 py-1.5 {{ empty($selectedCategory) ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200' }} text-xs rounded-full shadow-sm hover:shadow-md transition">Semua</a>
+            <a href="{{ route('blog.index', ['category' => 'Teknologi']) }}" class="px-4 py-1.5 {{ ($selectedCategory === 'Teknologi') ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200' }} text-xs font-semibold rounded-full transition">Teknologi</a>
+            <a href="{{ route('blog.index', ['category' => 'Gaya Hidup']) }}" class="px-4 py-1.5 {{ ($selectedCategory === 'Gaya Hidup') ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200' }} text-xs font-semibold rounded-full transition">Gaya Hidup</a>
+            <a href="{{ route('blog.index', ['category' => 'Edukasi']) }}" class="px-4 py-1.5 {{ ($selectedCategory === 'Edukasi') ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200' }} text-xs font-semibold rounded-full transition">Edukasi</a>
+            <a href="{{ route('blog.index', ['category' => 'Bisnis']) }}" class="px-4 py-1.5 {{ ($selectedCategory === 'Bisnis') ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200' }} text-xs font-semibold rounded-full transition">Bisnis</a>
+            <a href="{{ route('blog.index', ['category' => 'Kreatif']) }}" class="px-4 py-1.5 {{ ($selectedCategory === 'Kreatif') ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200' }} text-xs font-semibold rounded-full transition">Kreatif</a>
         </div>
 
         <!-- 1. HERO FEATURED SECTION (GAYA MAGAZINE 3 KOLOM) -->
@@ -142,7 +140,7 @@
             <!-- Card 2: Highlight Quote Box / Top Story (Lg: 3/12) -->
             @if($highlightPost)
             <div class="lg:col-span-3 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-7 sm:p-8 rounded-3xl relative flex flex-col justify-between overflow-hidden shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all duration-300">
-                <span class="absolute -top-1 -right-1 bg-indigo-600 text-white font-extrabold text-[8px] tracking-widest uppercase px-6 py-2 rotate-45 shadow-sm">
+                <span class="absolute top-4 right-4 bg-indigo-600 text-white font-extrabold text-[10px] tracking-wider uppercase px-3 py-1 rounded-full shadow-sm">
                     HIGHLIGHT
                 </span>
                 <div>
@@ -190,7 +188,9 @@
             <div class="lg:col-span-8 space-y-8">
 
                 <div class="flex justify-between items-center border-b border-slate-200 pb-4">
-                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Artikel Terbaru</h2>
+                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">
+                        {{ $selectedCategory ? 'Kategori: ' . $selectedCategory : 'Artikel Terbaru' }}
+                    </h2>
                     <span class="text-xs text-slate-400 font-semibold">Menampilkan tutorial dev terbaik</span>
                 </div>
 
@@ -204,8 +204,10 @@
                                     alt="{{ $post->title }}"
                                     class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-300">
                             </div>
-                            <div class="text-[11px] font-semibold text-indigo-600 mb-2 uppercase tracking-wider">
-                                {{ $post->created_at->format('d M Y') }}
+                            <div class="flex items-center space-x-2 text-[11px] font-semibold text-indigo-600 mb-2 uppercase tracking-wider">
+                                <span class="bg-indigo-50 px-2 py-0.5 rounded">{{ $post->category }}</span>
+                                <span class="text-slate-300">•</span>
+                                <span class="text-slate-400 font-medium">{{ $post->created_at->format('d M Y') }}</span>
                             </div>
                             <h3 class="font-bold text-slate-900 text-base group-hover:text-indigo-600 transition duration-200 leading-snug line-clamp-2">
                                 {{ $post->title }}
@@ -257,9 +259,8 @@
     <!-- FOOTER -->
     <footer class="bg-white border-t border-slate-100 mt-28 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-            <div class="flex justify-center items-center space-x-2 font-extrabold text-lg text-slate-900">
-                <div class="w-6 h-6 bg-indigo-600 text-white rounded-md flex items-center justify-center font-black text-xs shadow-sm">B</div>
-                <span>Bagusdev<span class="text-indigo-600">Blog</span></span>
+            <div class="flex justify-center items-center">
+                <img src="{{ asset('images/logo.png') }}" alt="BagusdevBlog Logo" class="h-8 w-auto">
             </div>
             <p class="text-xs text-slate-400 font-medium">
                 &copy; {{ date('Y') }} BagusdevBlog. All rights reserved. Built with Tailwind CSS & Laravel.

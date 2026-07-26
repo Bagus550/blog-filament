@@ -29,8 +29,13 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Indigo,
             ])
+            ->brandName('BagusdevBlog Admin')
+            ->brandLogo(asset('images/logo-admin.png'))
+            ->brandLogoHeight('2.5rem')
+            ->favicon(asset('images/logo-admin.ico'))
+            ->font('Plus Jakarta Sans')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
@@ -39,7 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
                 AccountWidget::class,
-                FilamentInfoWidget::class,
+                \App\Filament\Widgets\BlogOverview::class,
             ])
             ->middleware([
                 EncryptCookies::class,

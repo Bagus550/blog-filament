@@ -13,6 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
 
     <style>
         body {
@@ -61,13 +62,8 @@
     <header class="bg-white/95 border-b border-gray-100 sticky top-0 z-50 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <!-- Branding -->
-            <a href="/" class="flex items-center space-x-3 group">
-                <div class="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-black text-xl shadow-md shadow-indigo-200 group-hover:scale-105 transition">
-                    B
-                </div>
-                <span class="text-xl font-extrabold tracking-tight text-gray-900">
-                    Bagusdev<span class="text-indigo-600">Blog</span>
-                </span>
+            <a href="/" class="flex items-center group">
+                <img src="{{ asset('images/logo.png') }}" alt="BagusdevBlog Logo" class="h-10 w-auto group-hover:scale-[1.02] transition duration-200">
             </a>
 
             <!-- Back to Home Button -->
@@ -85,8 +81,8 @@
         <!-- ARTICLE HEADER -->
         <header class="mb-10 text-center sm:text-left">
             <!-- Meta Tag -->
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 mb-4">
-                Tutorial
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 mb-4 uppercase tracking-wider">
+                {{ $post->category }}
             </span>
             
             <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight mb-6">
@@ -107,14 +103,14 @@
 
                 <!-- Date & Social Share -->
                 <div class="flex items-center space-x-4 text-xs text-gray-500">
-                    <span>{{ $post->created_at->format('d M Y') }}</span>
+                    <span class="font-medium">{{ $post->created_at->format('d M Y') }}</span>
                     <span>•</span>
-                    <button onclick="navigator.clipboard.writeText(window.location.href); alert('Link berhasil disalin!')" 
-                        class="flex items-center space-x-1 hover:text-indigo-600 transition font-medium">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 10.742l4.885 2.502m0 0l4.885-2.502m-4.885 2.502v5.792M12 14a3 3 0 110-6 3 3 0 010 6z"></path>
+                    <button onclick="navigator.clipboard.writeText(window.location.href); alert('Tautan artikel berhasil disalin!')" 
+                        class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 rounded-full transition font-semibold text-[11px] border border-slate-200/60 shadow-sm">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
                         </svg>
-                        <span>Bagikan</span>
+                        <span>Salin Tautan</span>
                     </button>
                 </div>
             </div>
@@ -141,7 +137,7 @@
                     @elseif ($block['type'] === 'image')
                         <figure class="my-8">
                             <div class="overflow-hidden rounded-2xl shadow-md border border-gray-100">
-                                <img src="{{ filter_var($block['data']['url'], FILTER_VALIDATE_URL) ? $block['data']['url'] : Storage::url($block['data']['url']) }}" 
+                                <img src="{{ filter_var($block['data']['url'], FILTER_VALIDATE_URL) ? $block['data']['url'] : '/storage/' . $block['data']['url'] }}" 
                                     alt="{{ $block['data']['alt'] ?? '' }}" 
                                     class="w-full object-cover">
                             </div>
@@ -188,9 +184,8 @@
     <!-- FOOTER -->
     <footer class="bg-white border-t border-gray-200 py-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
-            <div class="flex justify-center items-center space-x-2 font-extrabold text-lg text-gray-900">
-                <div class="w-6 h-6 bg-indigo-600 text-white rounded-md flex items-center justify-center font-black text-xs">B</div>
-                <span>Bagusdev<span class="text-indigo-600">Blog</span></span>
+            <div class="flex justify-center items-center">
+                <img src="{{ asset('images/logo.png') }}" alt="BagusdevBlog Logo" class="h-8 w-auto">
             </div>
             <p class="text-xs text-gray-500">
                 &copy; {{ date('Y') }} BagusdevBlog. All rights reserved.

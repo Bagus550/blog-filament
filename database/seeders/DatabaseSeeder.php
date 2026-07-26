@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Membangun RESTful API Modern dengan Laravel 11 dan Sanctum',
                 'slug' => 'membangun-restful-api-modern-dengan-laravel-11-dan-sanctum',
+                'category' => 'Teknologi',
                 'content' => [
                     [
                         'type' => 'paragraph',
@@ -53,25 +54,13 @@ class DatabaseSeeder extends Seeder
                             'content' => 'Keamanan dan performa adalah fondasi utama dari setiap API yang andal di industri.',
                             'author' => 'Taylor Otwell'
                         ]
-                    ],
-                    [
-                        'type' => 'heading',
-                        'data' => [
-                            'content' => 'Langkah Instalasi Sanctum',
-                            'level' => 'h3'
-                        ]
-                    ],
-                    [
-                        'type' => 'paragraph',
-                        'data' => [
-                            'content' => '<p>Cukup jalankan perintah <code>php artisan install:api</code> untuk secara otomatis menginstal Sanctum, menerbitkan file migrasi token personal, serta mengonfigurasi middleware API. Pastikan Anda mengaktifkan trait <code>HasApiTokens</code> pada model User Anda.</p>'
-                        ]
                     ]
                 ]
             ],
             [
                 'title' => 'Panduan Lengkap Tailwind CSS: Menguasai Responsive Grid & Flexbox',
                 'slug' => 'panduan-lengkap-tailwind-css-menguasai-responsive-grid-flexbox',
+                'category' => 'Teknologi',
                 'content' => [
                     [
                         'type' => 'paragraph',
@@ -85,93 +74,103 @@ class DatabaseSeeder extends Seeder
                             'content' => 'Memahami CSS Grid vs Flexbox',
                             'level' => 'h2'
                         ]
-                    ],
-                    [
-                        'type' => 'paragraph',
-                        'data' => [
-                            'content' => '<p>Flexbox sangat cocok untuk layout satu dimensi (seperti baris navigasi atau daftar item sejajar). Sedangkan CSS Grid dirancang untuk tata letak dua dimensi yang lebih kompleks (seperti layout majalah atau dasbor admin).</p>'
-                        ]
-                    ],
-                    [
-                        'type' => 'quote',
-                        'data' => [
-                            'content' => 'Desain responsif bukan lagi fitur opsional, melainkan kebutuhan wajib bagi setiap aplikasi web modern.',
-                            'author' => 'Steve Schoger'
-                        ]
                     ]
                 ]
             ],
             [
                 'title' => 'Mengapa Anda Harus Menggunakan Filament PHP untuk Admin Panel',
                 'slug' => 'mengapa-anda-harus-menggunakan-filament-php-untuk-admin-panel',
+                'category' => 'Teknologi',
                 'content' => [
                     [
                         'type' => 'paragraph',
                         'data' => [
                             'content' => '<p>Membuat admin panel dari nol memakan waktu berhari-hari bahkan berminggu-minggu. Filament PHP hadir sebagai solusi elegan berbasis TALL stack (Tailwind CSS, Alpine.js, Laravel, Livewire) untuk membangun CMS super canggih dalam hitungan menit.</p>'
                         ]
+                    ]
+                ]
+            ],
+            [
+                'title' => '5 Tips Menjaga Work-Life Balance untuk Pekerja Kreatif',
+                'slug' => '5-tips-menjaga-work-life-balance-untuk-pekerja-kreatif',
+                'category' => 'Gaya Hidup',
+                'content' => [
+                    [
+                        'type' => 'paragraph',
+                        'data' => [
+                            'content' => '<p>Di era digital saat ini, batasan antara pekerjaan dan kehidupan pribadi seringkali kabur, terutama bagi pekerja kreatif yang bekerja dari rumah (WFH) atau sebagai freelancer.</p>'
+                        ]
                     ],
                     [
                         'type' => 'heading',
                         'data' => [
-                            'content' => 'Fitur Unggulan Filament v3',
+                            'content' => 'Tetapkan Jam Kerja yang Tegas',
                             'level' => 'h2'
                         ]
                     ],
                     [
                         'type' => 'paragraph',
                         'data' => [
-                            'content' => '<p>Filament tidak hanya menyediakan form input dan tabel data dasar. Versi terbaru memiliki fitur Block Builder kustom, skema multi-kolom yang dinamis, widget grafik interaktif, dan sistem otorisasi peran (Role-Based Access Control) yang sangat rapi.</p>'
+                            'content' => '<p>Meskipun Anda memiliki waktu yang fleksibel, menentukan kapan Anda mulai bekerja dan kapan Anda berhenti sangat krusial untuk mencegah kelelahan mental (burnout).</p>'
+                        ]
+                    ],
+                    [
+                        'type' => 'quote',
+                        'data' => [
+                            'content' => 'Istirahat bukanlah tanda kemalasan, melainkan bahan bakar untuk kreativitas berikutnya.',
+                            'author' => 'Arianna Huffington'
                         ]
                     ]
                 ]
             ],
             [
-                'title' => 'Dockerisasi Aplikasi Laravel untuk Staging dan Produksi',
-                'slug' => 'dockerisasi-aplikasi-laravel-untuk-staging-dan-produksi',
+                'title' => 'Cara Memulai Bisnis Digital dari Rumah dengan Modal Kecil',
+                'slug' => 'cara-memulai-bisnis-digital-dari-rumah-dengan-modal-kecil',
+                'category' => 'Bisnis',
                 'content' => [
                     [
                         'type' => 'paragraph',
                         'data' => [
-                            'content' => '<p>Pernahkah Anda mendengar keluhan \"Tapi di lokal saya jalan\"? Docker memecahkan masalah ini dengan membungkus aplikasi Laravel beserta PHP, Nginx, dan MySQL ke dalam container yang identik di mana pun ia dijalankan.</p>'
+                            'content' => '<p>Teknologi internet membuka peluang bisnis yang sangat luas bagi siapa saja. Kini, Anda bisa menjual produk fisik maupun digital langsung dari kamar tidur Anda.</p>'
                         ]
                     ],
                     [
                         'type' => 'heading',
                         'data' => [
-                            'content' => 'Konfigurasi Docker Compose Sederhana',
+                            'content' => 'Langkah Pertama: Temukan Niche Pasar',
                             'level' => 'h2'
                         ]
                     ],
                     [
                         'type' => 'paragraph',
                         'data' => [
-                            'content' => '<p>Dengan mendefinisikan file <code>docker-compose.yml</code>, Anda dapat menjalankan seluruh service yang dibutuhkan hanya dengan satu perintah: <code>docker-compose up -d</code>. Ini sangat menghemat waktu onboarding developer baru.</p>'
+                            'content' => '<p>Jangan mencoba menjual segalanya kepada semua orang. Pilih satu kategori khusus yang Anda kuasai, misalnya aksesoris meja kerja minimalis atau template desain digital.</p>'
                         ]
                     ]
                 ]
             ],
             [
-                'title' => 'Optimasi Query Database di Eloquent ORM Laravel',
-                'slug' => 'optimasi-query-database-di-eloquent-orm-laravel',
+                'title' => 'Panduan Menulis Kreatif untuk Pemula: Menemukan Suara Unik Anda',
+                'slug' => 'panduan-menulis-kreatif-untuk-pemula-menemukan-suara-unik-anda',
+                'category' => 'Kreatif',
                 'content' => [
                     [
                         'type' => 'paragraph',
                         'data' => [
-                            'content' => '<p>Eloquent adalah ORM yang sangat user-friendly, tetapi di balik kemudahannya, terdapat jebakan performa seperti query N+1 yang dapat memperlambat loading website Anda secara signifikan saat data membesar.</p>'
+                            'content' => '<p>Menulis bukan hanya tentang merangkai tata bahasa yang benar, melainkan menyalurkan ide dan emosi ke dalam bentuk tulisan yang hidup dan membekas di hati pembaca.</p>'
                         ]
                     ],
                     [
                         'type' => 'heading',
                         'data' => [
-                            'content' => 'Mengatasi Query N+1 dengan Eager Loading',
+                            'content' => 'Mulai dengan Menulis Setiap Hari',
                             'level' => 'h2'
                         ]
                     ],
                     [
                         'type' => 'paragraph',
                         'data' => [
-                            'content' => '<p>Gunakan method <code>with()</code> untuk memuat relasi dari awal. Misalnya, dibanding memanggil relasi user di dalam loop postingan, panggillah <code>Post::with(\'user\')->get()</code> untuk memangkas ratusan query menjadi hanya dua query saja.</p>'
+                            'content' => '<p>Konsistensi mengalahkan bakat alami. Dedikasikan waktu 15 menit setiap pagi untuk menulis apa pun yang terlintas di pikiran Anda tanpa diedit terlebih dahulu.</p>'
                         ]
                     ]
                 ]
@@ -179,24 +178,12 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Mengenal Clean Architecture dalam Pengembangan Software Modern',
                 'slug' => 'mengenal-clean-architecture-dalam-pengembangan-software-modern',
+                'category' => 'Edukasi',
                 'content' => [
                     [
                         'type' => 'paragraph',
                         'data' => [
                             'content' => '<p>Clean Architecture menempatkan logika bisnis inti di pusat aplikasi, terisolasi penuh dari framework, database, dan UI. Pendekatan ini membuat kode Anda lebih mudah diuji (testable) dan dirawat dalam jangka panjang.</p>'
-                        ]
-                    ],
-                    [
-                        'type' => 'heading',
-                        'data' => [
-                            'content' => 'Prinsip Ketergantungan (Dependency Rule)',
-                            'level' => 'h2'
-                        ]
-                    ],
-                    [
-                        'type' => 'paragraph',
-                        'data' => [
-                            'content' => '<p>Aturan utama Clean Architecture menyatakan bahwa dependensi source code hanya boleh mengarah ke dalam (ke arah logika bisnis). Logika bisnis tidak boleh mengetahui apa database yang digunakan, apakah SQL atau MongoDB.</p>'
                         ]
                     ]
                 ]
@@ -204,24 +191,12 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Tips Meningkatkan Core Web Vitals untuk SEO Website Anda',
                 'slug' => 'tips-meningkatkan-core-web-vitals-untuk-seo-website-anda',
+                'category' => 'Edukasi',
                 'content' => [
                     [
                         'type' => 'paragraph',
                         'data' => [
                             'content' => '<p>Core Web Vitals kini menjadi salah satu faktor penentu peringkat pencarian Google. Website yang lambat dan bergeser saat loading akan ditinggalkan oleh pengunjung dan dinilai buruk oleh robot perayap.</p>'
-                        ]
-                    ],
-                    [
-                        'type' => 'heading',
-                        'data' => [
-                            'content' => 'Fokus pada LCP, FID, dan CLS',
-                            'level' => 'h2'
-                        ]
-                    ],
-                    [
-                        'type' => 'paragraph',
-                        'data' => [
-                            'content' => '<p>Optimalkan Largest Contentful Paint (LCP) dengan mengompres gambar dan menggunakan format modern seperti WebP. Kurangi Cumulative Layout Shift (CLS) dengan selalu memberikan dimensi lebar dan tinggi yang pasti pada tag image Anda.</p>'
                         ]
                     ]
                 ]
@@ -232,6 +207,7 @@ class DatabaseSeeder extends Seeder
             Post::create([
                 'title' => $post['title'],
                 'slug' => $post['slug'],
+                'category' => $post['category'],
                 'content' => $post['content'],
             ]);
         }

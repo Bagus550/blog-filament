@@ -46,6 +46,18 @@ class PostResource extends Resource
                     ->label('Slug URL')
                     ->required(),
 
+                Select::make('category')
+                    ->label('Jenis Artikel / Kategori')
+                    ->options([
+                        'Teknologi' => 'Teknologi',
+                        'Gaya Hidup' => 'Gaya Hidup',
+                        'Edukasi' => 'Edukasi',
+                        'Bisnis' => 'Bisnis',
+                        'Kreatif' => 'Kreatif',
+                    ])
+                    ->default('Teknologi')
+                    ->required(),
+
                 // --- BLOCK BUILDER UNTUK LAYOUT BEBAS ---
                 Builder::make('content')
                     ->label('Isi Konten Blog')
@@ -54,6 +66,7 @@ class PostResource extends Resource
                         // 1. Sub-judul
                         Builder\Block::make('heading')
                             ->label('Sub Judul')
+                            ->icon('heroicon-m-hashtag')
                             ->schema([
                                 TextInput::make('content')->label('Teks Sub-Judul')->required(),
                                 Select::make('level')
@@ -66,6 +79,7 @@ class PostResource extends Resource
                         // 2. Paragraf
                         Builder\Block::make('paragraph')
                             ->label('Paragraf Teks')
+                            ->icon('heroicon-m-bars-3-bottom-left')
                             ->schema([
                                 RichEditor::make('content')->label('Teks')->required(),
                             ]),
@@ -73,6 +87,7 @@ class PostResource extends Resource
                         // 3. Gambar Kustom (Kiri, Kanan, Tengah)
                         Builder\Block::make('image')
                             ->label('Gambar')
+                            ->icon('heroicon-m-photo')
                             ->schema([
                                 FileUpload::make('url')
                                     ->label('Pilih Gambar')
@@ -93,13 +108,16 @@ class PostResource extends Resource
                         // 4. Kutipan
                         Builder\Block::make('quote')
                             ->label('Kutipan')
+                            ->icon('heroicon-m-chat-bubble-bottom-center-text')
                             ->schema([
                                 TextInput::make('content')->label('Teks Kutipan')->required(),
                                 TextInput::make('author')->label('Penulis / Sumber'),
                             ]),
                     ])
                     ->columnSpanFull()
-                    ->collapsible(),
+                    ->collapsible()
+                    ->cloneable()
+                    ->blockNumbers(true),
             ]);
     }
 
@@ -109,6 +127,7 @@ class PostResource extends Resource
             ->columns([
                 TextColumn::make('title')->label('Judul')->searchable()->sortable(),
                 TextColumn::make('slug')->label('Slug'),
+                TextColumn::make('category')->label('Kategori')->sortable(),
                 TextColumn::make('created_at')->label('Dibuat Pada')->dateTime()->sortable(),
             ])
             ->filters([

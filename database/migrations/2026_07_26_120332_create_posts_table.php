@@ -16,6 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('title');
             $table->string('slug')->unique();
+            $table->string('category')->default('General');
             $table->json('content')->nullable();
         });
     }
