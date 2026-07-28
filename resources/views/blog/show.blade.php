@@ -105,7 +105,7 @@
             </a>
 
             <!-- Navigation Bar (desktop) -->
-            <nav class="hidden md:flex items-center space-x-6 text-sm font-semibold text-slate-600">
+            <nav class="hidden md:flex flex-1 justify-center items-center space-x-6 text-sm font-semibold text-slate-600">
                 <a href="{{ route('blog.index') }}" class="hover:text-indigo-600 transition duration-200 relative group">
                     Beranda
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
@@ -123,7 +123,7 @@
             </nav>
 
             <!-- Right: Back button + Hamburger -->
-            <div class="flex items-center gap-2 ml-auto">
+            <div class="flex items-center gap-2">
                 <a href="{{ route('blog.index') }}" class="flex items-center space-x-1.5 text-xs font-bold text-slate-600 hover:text-indigo-600 bg-slate-100 hover:bg-indigo-50 px-3 py-2 rounded-full transition group border border-slate-200/60">
                     <svg class="w-3.5 h-3.5 transform group-hover:-translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>

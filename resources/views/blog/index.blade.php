@@ -69,7 +69,7 @@
             </a>
 
             <!-- Navigation Bar (desktop) -->
-            <nav class="hidden md:flex items-center space-x-6 text-sm font-semibold text-slate-600">
+            <nav class="hidden md:flex flex-1 justify-center items-center space-x-6 text-sm font-semibold text-slate-600">
                 <a href="{{ route('blog.index', array_filter(['search' => $searchQuery ?? null])) }}"
                     class="hover:text-indigo-600 transition duration-200 relative group {{ empty($selectedCategory) ? 'text-indigo-600' : '' }}">
                     Beranda
@@ -90,7 +90,7 @@
             </nav>
 
             <!-- Right side: Search + Hamburger -->
-            <div class="flex items-center gap-2 ml-auto">
+            <div class="flex items-center gap-2">
                 <!-- Search Form -->
                 <form action="{{ route('blog.index') }}" method="GET" class="relative flex items-center">
                     @if(!empty($selectedCategory))
