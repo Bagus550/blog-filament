@@ -5,8 +5,6 @@ namespace App\Filament\Resources\Posts;
 use App\Filament\Resources\Posts\Pages\CreatePost;
 use App\Filament\Resources\Posts\Pages\EditPost;
 use App\Filament\Resources\Posts\Pages\ListPosts;
-use App\Filament\Resources\Posts\Schemas\PostForm;
-use App\Filament\Resources\Posts\Tables\PostsTable;
 use App\Models\Post;
 use BackedEnum;
 use Filament\Forms\Components\TextInput;
@@ -16,8 +14,6 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\FileUpload;
@@ -25,6 +21,7 @@ use Filament\Forms\Components\Select;
 use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Tables\Columns\ImageColumn;
 
 class PostResource extends Resource
 {
@@ -49,14 +46,21 @@ class PostResource extends Resource
                 Select::make('category')
                     ->label('Jenis Artikel / Kategori')
                     ->options([
-                        'Teknologi' => 'Teknologi',
-                        'Gaya Hidup' => 'Gaya Hidup',
-                        'Edukasi' => 'Edukasi',
-                        'Bisnis' => 'Bisnis',
-                        'Kreatif' => 'Kreatif',
+                        'Ensiklopedia' => 'Ensiklopedia',
+                        'Fakta Unik'   => 'Fakta Unik',
+                        'Info Menarik' => 'Info Menarik',
                     ])
-                    ->default('Teknologi')
+                    ->default('Ensiklopedia')
                     ->required(),
+
+                FileUpload::make('thumbnail')
+                    ->label('Gambar Sampul / Thumbnail')
+                    ->image()
+                    ->disk('public')
+                    ->directory('thumbnails')
+                    ->visibility('public')
+                    ->imageEditor() // (Opsional) Mengizinkan crop/edit gambar di Filament
+                    ->columnSpanFull(),
 
                 // --- BLOCK BUILDER UNTUK LAYOUT BEBAS ---
                 Builder::make('content')
@@ -92,6 +96,8 @@ class PostResource extends Resource
                                 FileUpload::make('url')
                                     ->label('Pilih Gambar')
                                     ->image()
+                                    ->disk('public')
+                                    ->visibility('public')
                                     ->directory('blog-images')
                                     ->required(),
                                 TextInput::make('alt')->label('Keterangan Gambar (Alt)'),
@@ -103,6 +109,27 @@ class PostResource extends Resource
                                         'right'  => 'Rata Kanan (Text Wrapping)',
                                     ])
                                     ->default('center'),
+                            ]),
+
+                        Builder\Block::make('grid_images')
+                            ->label('Gambar Grid')
+                            ->icon('heroicon-m-squares-2x2')
+                            ->schema([
+                                FileUpload::make('image_left')
+                                    ->label('Gambar Kiri')
+                                    ->image()
+                                    ->disk('public')
+                                    ->directory('blog-images'),
+                                TextInput::make('caption_left')
+                                    ->label('Caption Gambar Kiri'),
+
+                                FileUpload::make('image_right')
+                                    ->label('Gambar Kanan')
+                                    ->image()
+                                    ->disk('public')
+                                    ->directory('blog-images'),
+                                TextInput::make('caption_right')
+                                    ->label('Caption Gambar Kanan'),
                             ]),
 
                         // 4. Kutipan
@@ -125,13 +152,26 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('thumbnail')
+                    ->label('Sampul')
+                    ->disk('public'),
                 TextColumn::make('title')->label('Judul')->searchable()->sortable(),
                 TextColumn::make('slug')->label('Slug'),
                 TextColumn::make('category')->label('Kategori')->sortable(),
+                TextColumn::make('views_count')
+                    ->label('Dibaca')
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('created_at')->label('Dibuat Pada')->dateTime()->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('category')
+                    ->label('Filter Kategori')
+                    ->options([
+                        'Ensiklopedia' => 'Ensiklopedia',
+                        'Fakta Unik'   => 'Fakta Unik',
+                        'Info Menarik' => 'Info Menarik',
+                    ]),
             ])
             ->actions([
                 EditAction::make(),

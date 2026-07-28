@@ -13,9 +13,42 @@ class Post extends Model
         'content' => 'array',
     ];
 
+    /**
+     * Bug 5 fix: Accessor untuk mendapatkan URL thumbnail.
+     * Menggantikan fungsi getPostThumbnail() di Blade agar tidak ada risiko redeclaration.
+     * Gunakan: $post->thumbnail_url
+     */
+    public function getThumbnailUrlAttribute(): string
+    {
+        // 1. Cek apakah ada file thumbnail di kolom database
+        if (!empty($this->thumbnail)) {
+            return filter_var($this->thumbnail, FILTER_VALIDATE_URL)
+                ? $this->thumbnail
+                : asset('storage/' . $this->thumbnail);
+        }
+
+        // 2. Fallback: Cari gambar pertama dari builder content jika thumbnail kosong
+        // Cast 'array' di $casts sudah menjamin $this->content bertipe array, tidak perlu json_decode
+        $content = $this->content ?? [];
+        if (is_array($content)) {
+            foreach ($content as $block) {
+                if (isset($block['type']) && $block['type'] === 'image' && !empty($block['data']['url'])) {
+                    $imageUrl = $block['data']['url'];
+                    return filter_var($imageUrl, FILTER_VALIDATE_URL)
+                        ? $imageUrl
+                        : asset('storage/' . $imageUrl);
+                }
+            }
+        }
+
+        // 3. Fallback terakhir jika tidak ada gambar sama sekali
+        return 'https://placehold.co/800x600?text=No+Image';
+    }
+
     public function getExcerptAttribute($limit = 120)
     {
-        $blocks = is_array($this->content) ? $this->content : json_decode($this->content, true);
+        // Cast 'array' di $casts sudah menjamin $this->content bertipe array, tidak perlu json_decode
+        $blocks = $this->content ?? [];
 
         if (!is_array($blocks)) {
             return '';
@@ -38,3 +71,4 @@ class Post extends Model
         return '';
     }
 }
+

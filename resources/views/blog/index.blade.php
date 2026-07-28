@@ -20,22 +20,39 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
+
+        /* Mobile menu drawer transition */
+        #mobile-menu {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        #mobile-menu.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        #mobile-menu.open {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
     </style>
 </head>
 
 <body class="bg-[#f8fafc] text-slate-800 antialiased selection:bg-indigo-500 selection:text-white">
+
+    {{-- Bug 5 fix: Fungsi getPostThumbnail() telah dipindahkan ke Model Post sebagai accessor thumbnail_url --}}
 
     <!-- TOP ANNOUNCEMENT BAR -->
     @if($featuredPost)
     <div class="bg-slate-900 text-white text-xs py-2.5 px-4 shadow-inner">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-2 truncate">
-                <span class="bg-indigo-600 text-white text-[9px] uppercase font-extrabold px-2.5 py-0.5 rounded-full tracking-wider animate-pulse">LATEST STORY</span>
+                <span class="bg-indigo-600 text-white text-[9px] uppercase font-extrabold px-2.5 py-0.5 rounded-full tracking-wider animate-pulse shrink-0">LATEST</span>
                 <a href="{{ route('blog.show', $featuredPost->slug) }}" class="hover:text-indigo-400 transition truncate text-slate-200 font-medium">
                     {{ $featuredPost->title }}
                 </a>
             </div>
-            <div class="hidden sm:block text-slate-400 shrink-0 text-[11px] font-medium">
+            <div class="hidden sm:block text-slate-400 shrink-0 text-[11px] font-medium ml-4">
                 {{ $featuredPost->created_at->format('d M Y') }}
             </div>
         </div>
@@ -44,73 +61,96 @@
 
     <!-- MAIN HEADER -->
     <header class="bg-white/90 border-b border-slate-100 sticky top-0 z-50 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
 
             <!-- Branding BagusdevBlog -->
-            <a href="/" class="flex items-center group">
-                <img src="{{ asset('images/logo.png') }}" alt="BagusdevBlog Logo" class="h-10 w-auto group-hover:scale-[1.02] transition duration-200">
+            <a href="/" class="flex items-center group shrink-0">
+                <img src="{{ asset('images/logo.png') }}" alt="BagusdevBlog Logo" class="h-9 w-auto group-hover:scale-[1.02] transition duration-200">
             </a>
 
-            <!-- Navigation Bar -->
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
-                <a href="#" class="hover:text-indigo-600 transition duration-200 relative group">
-                    Tutorial
-                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
+            <!-- Navigation Bar (desktop) -->
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-semibold text-slate-600">
+                <a href="{{ route('blog.index', array_filter(['search' => $searchQuery ?? null])) }}"
+                    class="hover:text-indigo-600 transition duration-200 relative group {{ empty($selectedCategory) ? 'text-indigo-600' : '' }}">
+                    Beranda
+                    <span class="absolute bottom-0 left-0 {{ empty($selectedCategory) ? 'w-full' : 'w-0' }} h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
                 </a>
-                <a href="#" class="hover:text-indigo-600 transition duration-200 relative group">
-                    Web Development
-                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
+
+                @php
+                $catList = $categories ?? ['Ensiklopedia', 'Fakta Unik', 'Info Menarik'];
+                @endphp
+
+                @foreach($catList as $categoryName)
+                <a href="{{ route('blog.index', array_filter(['category' => $categoryName, 'search' => $searchQuery ?? null])) }}"
+                    class="hover:text-indigo-600 transition duration-200 relative group {{ ($selectedCategory ?? '') === $categoryName ? 'text-indigo-600 font-bold' : '' }}">
+                    {{ $categoryName }}
+                    <span class="absolute bottom-0 left-0 {{ ($selectedCategory ?? '') === $categoryName ? 'w-full' : 'w-0' }} h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
                 </a>
-                <a href="#" class="hover:text-indigo-600 transition duration-200 relative group">
-                    Backend
-                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
-                </a>
-                <a href="#" class="hover:text-indigo-600 transition duration-200 relative group">
-                    Architecture
-                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
-                </a>
+                @endforeach
             </nav>
 
-            <!-- Search Icon -->
-            <div class="flex items-center space-x-3">
-                <button class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-slate-100 rounded-full transition duration-200" aria-label="Search">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            <!-- Right side: Search + Hamburger -->
+            <div class="flex items-center gap-2 ml-auto">
+                <!-- Search Form -->
+                <form action="{{ route('blog.index') }}" method="GET" class="relative flex items-center">
+                    @if(!empty($selectedCategory))
+                    <input type="hidden" name="category" value="{{ $selectedCategory }}">
+                    @endif
+                    <input type="text" name="search" value="{{ $searchQuery ?? '' }}" placeholder="Cari artikel..."
+                        class="w-32 sm:w-48 md:w-56 text-xs bg-slate-100 text-slate-700 pl-3 pr-8 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all">
+                    <button type="submit" class="absolute right-2 p-1 text-slate-400 hover:text-indigo-600 transition" aria-label="Search">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
+                </form>
+
+                <!-- Hamburger Button (mobile only) -->
+                <button id="hamburger-btn" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition" aria-label="Toggle menu">
+                    <svg id="icon-open" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                    <svg id="icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
         </div>
+
+        <!-- Mobile Menu Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pb-4 pt-2 space-y-1">
+            @php $catList = $categories ?? ['Ensiklopedia', 'Fakta Unik', 'Info Menarik']; @endphp
+            <a href="{{ route('blog.index') }}"
+                class="block py-2.5 px-3 rounded-xl text-sm font-semibold {{ empty($selectedCategory) ? 'text-indigo-600 bg-indigo-50' : 'text-slate-700 hover:bg-slate-50' }} transition">
+                Beranda
+            </a>
+            @foreach($catList as $categoryName)
+            <a href="{{ route('blog.index', array_filter(['category' => $categoryName])) }}"
+                class="block py-2.5 px-3 rounded-xl text-sm font-semibold {{ ($selectedCategory ?? '') === $categoryName ? 'text-indigo-600 bg-indigo-50' : 'text-slate-700 hover:bg-slate-50' }} transition">
+                {{ $categoryName }}
+            </a>
+            @endforeach
+        </div>
     </header>
 
     <!-- CONTAINER UTAMA -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
-
-        <!-- CATEGORIES SECTION -->
-        <div class="flex items-center space-x-3 overflow-x-auto pb-4 scrollbar-none">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 mr-2">Topik:</span>
-            <a href="{{ route('blog.index') }}" class="px-4 py-1.5 {{ empty($selectedCategory) ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200' }} text-xs rounded-full shadow-sm hover:shadow-md transition">Semua</a>
-            <a href="{{ route('blog.index', ['category' => 'Teknologi']) }}" class="px-4 py-1.5 {{ ($selectedCategory === 'Teknologi') ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200' }} text-xs font-semibold rounded-full transition">Teknologi</a>
-            <a href="{{ route('blog.index', ['category' => 'Gaya Hidup']) }}" class="px-4 py-1.5 {{ ($selectedCategory === 'Gaya Hidup') ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200' }} text-xs font-semibold rounded-full transition">Gaya Hidup</a>
-            <a href="{{ route('blog.index', ['category' => 'Edukasi']) }}" class="px-4 py-1.5 {{ ($selectedCategory === 'Edukasi') ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200' }} text-xs font-semibold rounded-full transition">Edukasi</a>
-            <a href="{{ route('blog.index', ['category' => 'Bisnis']) }}" class="px-4 py-1.5 {{ ($selectedCategory === 'Bisnis') ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200' }} text-xs font-semibold rounded-full transition">Bisnis</a>
-            <a href="{{ route('blog.index', ['category' => 'Kreatif']) }}" class="px-4 py-1.5 {{ ($selectedCategory === 'Kreatif') ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200' }} text-xs font-semibold rounded-full transition">Kreatif</a>
-        </div>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-12 sm:space-y-16">
 
         <!-- 1. HERO FEATURED SECTION (GAYA MAGAZINE 3 KOLOM) -->
-        @if($featuredPost)
-        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        @if(empty($searchQuery) && empty($selectedCategory) && isset($featuredPost) && $featuredPost)
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
 
-            <!-- Card 1: Featured Utama (Lg: 5/12) -->
-            <div class="lg:col-span-5 flex flex-col justify-between bg-white p-5 rounded-3xl border border-slate-100 hover:shadow-xl transition-all duration-300 group">
+            <!-- Card 1: Featured Utama -->
+            <div class="lg:col-span-5 flex flex-col justify-between bg-white p-4 sm:p-5 rounded-3xl border border-slate-100 hover:shadow-xl transition-all duration-300 group">
                 <a href="{{ route('blog.show', $featuredPost->slug) }}" class="block flex-grow">
-                    <div class="overflow-hidden rounded-2xl mb-5 aspect-[4/3] bg-slate-100 relative shadow-sm">
-                        <img src="https://picsum.photos/700/525?random={{ $featuredPost->id }}"
+                    <div class="overflow-hidden rounded-2xl mb-4 sm:mb-5 aspect-[4/3] bg-slate-100 relative shadow-sm">
+                        <img src="{{ $featuredPost->thumbnail_url }}"
                             alt="{{ $featuredPost->title }}"
                             class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-900/10 to-transparent"></div>
                     </div>
                     <span class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-widest bg-indigo-50 px-2.5 py-1 rounded-md">FEATURED STORY</span>
-                    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 group-hover:text-indigo-600 transition duration-200 leading-snug mt-4">
+                    <h1 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 group-hover:text-indigo-600 transition duration-200 leading-snug mt-3 sm:mt-4">
                         {{ $featuredPost->title }}
                     </h1>
 
@@ -118,35 +158,36 @@
                     $content = is_string($featuredPost->content) ? json_decode($featuredPost->content, true) : $featuredPost->content;
                     $excerpt = '';
                     if (is_array($content)) {
-                        foreach ($content as $block) {
-                            if (isset($block['type']) && $block['type'] === 'paragraph') {
-                                $excerpt = Str::limit(strip_tags($block['data']['content']), 140);
-                                break;
-                            }
-                        }
+                    foreach ($content as $block) {
+                    if (isset($block['type']) && $block['type'] === 'paragraph') {
+                    // Bug 4 fix: Ganti Str:: dengan fully-qualified namespace
+                    $excerpt = \Illuminate\Support\Str::limit(strip_tags($block['data']['content']), 140);
+                    break;
+                    }
+                    }
                     }
                     @endphp
                     <p class="text-slate-500 text-sm mt-3 line-clamp-3 leading-relaxed">
                         {{ $excerpt }}
                     </p>
                 </a>
-                <div class="text-xs text-slate-400 mt-6 pt-4 border-t border-slate-50 flex items-center space-x-2">
+                <div class="text-xs text-slate-400 mt-4 sm:mt-6 pt-4 border-t border-slate-50 flex items-center space-x-2">
                     <span class="font-bold text-slate-700">Bagusdev</span>
                     <span>•</span>
                     <span>{{ $featuredPost->created_at->format('d M Y') }}</span>
                 </div>
             </div>
 
-            <!-- Card 2: Highlight Quote Box / Top Story (Lg: 3/12) -->
-            @if($highlightPost)
-            <div class="lg:col-span-3 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-7 sm:p-8 rounded-3xl relative flex flex-col justify-between overflow-hidden shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all duration-300">
+            <!-- Card 2: Highlight Quote Box -->
+            @if(isset($highlightPost) && $highlightPost)
+            <div class="lg:col-span-3 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-6 sm:p-8 rounded-3xl relative flex flex-col justify-between overflow-hidden shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all duration-300">
                 <span class="absolute top-4 right-4 bg-indigo-600 text-white font-extrabold text-[10px] tracking-wider uppercase px-3 py-1 rounded-full shadow-sm">
                     HIGHLIGHT
                 </span>
                 <div>
-                    <div class="text-indigo-400 text-6xl font-serif leading-none mb-3 pointer-events-none select-none">“</div>
+                    <div class="text-indigo-400 text-6xl font-serif leading-none mb-3 pointer-events-none select-none">"</div>
                     <a href="{{ route('blog.show', $highlightPost->slug) }}">
-                        <h2 class="text-xl font-bold leading-snug hover:text-indigo-300 transition duration-200">
+                        <h2 class="text-lg sm:text-xl font-bold leading-snug hover:text-indigo-300 transition duration-200">
                             {{ $highlightPost->title }}
                         </h2>
                     </a>
@@ -158,21 +199,21 @@
             </div>
             @endif
 
-            <!-- Card 3: Secondary Highlight (Lg: 4/12) -->
-            @if($secondaryPost)
-            <div class="lg:col-span-4 flex flex-col justify-between bg-white p-5 rounded-3xl border border-slate-100 hover:shadow-xl transition-all duration-300 group">
+            <!-- Card 3: Secondary Highlight -->
+            @if(isset($secondaryPost) && $secondaryPost)
+            <div class="lg:col-span-4 flex flex-col justify-between bg-white p-4 sm:p-5 rounded-3xl border border-slate-100 hover:shadow-xl transition-all duration-300 group">
                 <a href="{{ route('blog.show', $secondaryPost->slug) }}" class="block flex-grow">
-                    <div class="overflow-hidden rounded-2xl mb-5 aspect-[16/9] bg-slate-100 relative shadow-sm">
-                        <img src="https://picsum.photos/600/338?random={{ $secondaryPost->id }}"
+                    <div class="overflow-hidden rounded-2xl mb-4 sm:mb-5 aspect-[16/9] bg-slate-100 relative shadow-sm">
+                        <img src="{{ $secondaryPost->thumbnail_url }}"
                             alt="{{ $secondaryPost->title }}"
                             class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-500">
                     </div>
                     <span class="text-[10px] font-extrabold text-amber-600 uppercase tracking-widest bg-amber-50 px-2.5 py-1 rounded-md">TRENDING</span>
-                    <h2 class="text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition duration-200 mt-4 leading-snug">
+                    <h2 class="text-lg sm:text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition duration-200 mt-3 sm:mt-4 leading-snug">
                         {{ $secondaryPost->title }}
                     </h2>
                 </a>
-                <div class="text-xs text-slate-400 mt-6 pt-4 border-t border-slate-50">
+                <div class="text-xs text-slate-400 mt-4 sm:mt-6 pt-4 border-t border-slate-50">
                     {{ $secondaryPost->created_at->format('d M Y') }}
                 </div>
             </div>
@@ -182,25 +223,33 @@
         @endif
 
         <!-- 2. MAIN CONTENT AREA & SIDEBAR -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
 
-            <!-- MAIN CONTENT / TUTORIAL GRID (70% = Lg: 8/12) -->
-            <div class="lg:col-span-8 space-y-8">
+            <!-- MAIN CONTENT / TUTORIAL GRID -->
+            <div class="lg:col-span-8 space-y-6 sm:space-y-8">
 
                 <div class="flex justify-between items-center border-b border-slate-200 pb-4">
-                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">
-                        {{ $selectedCategory ? 'Kategori: ' . $selectedCategory : 'Artikel Terbaru' }}
-                    </h2>
-                    <span class="text-xs text-slate-400 font-semibold">Menampilkan tutorial dev terbaik</span>
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+                            {{ $selectedCategory ? 'Kategori: ' . $selectedCategory : 'Artikel Terbaru' }}
+                        </h2>
+                        @if(!empty($searchQuery))
+                        <p class="text-xs text-indigo-600 font-medium mt-1">
+                            Hasil pencarian: "<span class="font-bold">{{ $searchQuery }}</span>"
+                            <a href="{{ route('blog.index', array_filter(['category' => $selectedCategory])) }}" class="text-red-500 underline ml-2">hapus</a>
+                        </p>
+                        @endif
+                    </div>
+                    <span class="text-xs text-slate-400 font-semibold shrink-0 ml-2">{{ count($tutorialPosts) }} Artikel</span>
                 </div>
 
                 <!-- Grid Artikel -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-8">
                     @forelse($tutorialPosts as $post)
                     <article class="group bg-white p-4 rounded-2xl border border-slate-100 hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
                         <a href="{{ route('blog.show', $post->slug) }}" class="block flex-grow">
                             <div class="overflow-hidden rounded-xl mb-4 aspect-[16/10] bg-slate-100">
-                                <img src="https://picsum.photos/400/250?random={{ $post->id }}"
+                                <img src="{{ $post->thumbnail_url }}"
                                     alt="{{ $post->title }}"
                                     class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-300">
                             </div>
@@ -215,25 +264,26 @@
                         </a>
                     </article>
                     @empty
-                    <p class="text-slate-500 text-sm col-span-2 italic">Belum ada artikel tutorial tambahan.</p>
+                    <p class="text-slate-500 text-sm col-span-2 italic">Belum ada artikel yang di upload.</p>
                     @endforelse
                 </div>
 
             </div>
 
-            <!-- SIDEBAR AREA (30% = Lg: 4/12) -->
+            <!-- SIDEBAR AREA -->
             <aside class="lg:col-span-4 space-y-6">
 
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6">
-                    <h3 class="text-lg font-extrabold text-slate-900 pb-3 border-b border-slate-100">
+                <div class="bg-white p-5 sm:p-6 rounded-3xl border border-slate-100 shadow-sm space-y-5 sm:space-y-6">
+                    <h3 class="text-base sm:text-lg font-extrabold text-slate-900 pb-3 border-b border-slate-100">
                         Populer Minggu Ini
                     </h3>
 
-                    <div class="space-y-6">
-                        @foreach($sidebarPosts as $post)
-                        <a href="{{ route('blog.show', $post->slug) }}" class="flex items-center space-x-4 group">
-                            <div class="w-16 h-16 rounded-xl bg-slate-100 shrink-0 overflow-hidden shadow-inner">
-                                <img src="https://picsum.photos/120/120?random={{ $post->id }}"
+                    <div class="space-y-4 sm:space-y-6">
+                        @foreach($sidebarPosts ?? [] as $post)
+                        {{-- @var $post \App\Models\Post --}}
+                        <a href="{{ route('blog.show', $post->slug) }}" class="flex items-center space-x-3 sm:space-x-4 group">
+                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-slate-100 shrink-0 overflow-hidden shadow-inner">
+                                <img src="{{ $post->thumbnail_url }}"
                                     alt="{{ $post->title }}"
                                     class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                             </div>
@@ -248,6 +298,7 @@
                         </a>
                         @endforeach
                     </div>
+
                 </div>
 
             </aside>
@@ -257,16 +308,40 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-white border-t border-slate-100 mt-28 py-12">
+    <footer class="bg-white border-t border-slate-100 mt-16 sm:mt-28 py-10 sm:py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
             <div class="flex justify-center items-center">
                 <img src="{{ asset('images/logo.png') }}" alt="BagusdevBlog Logo" class="h-8 w-auto">
             </div>
             <p class="text-xs text-slate-400 font-medium">
-                &copy; {{ date('Y') }} BagusdevBlog. All rights reserved. Built with Tailwind CSS & Laravel.
+                &copy; {{ date('Y') }} BagusDev. All rights reserved. Built with Tailwind CSS & Laravel.
             </p>
         </div>
     </footer>
+
+    <!-- Mobile Menu Script -->
+    <script>
+        const btn = document.getElementById('hamburger-btn');
+        const menu = document.getElementById('mobile-menu');
+        const iconOpen = document.getElementById('icon-open');
+        const iconClose = document.getElementById('icon-close');
+        let isOpen = false;
+
+        btn.addEventListener('click', () => {
+            isOpen = !isOpen;
+            if (isOpen) {
+                menu.classList.remove('hidden');
+                requestAnimationFrame(() => menu.classList.add('open'));
+                iconOpen.classList.add('hidden');
+                iconClose.classList.remove('hidden');
+            } else {
+                menu.classList.remove('open');
+                menu.classList.add('hidden');
+                iconOpen.classList.remove('hidden');
+                iconClose.classList.add('hidden');
+            }
+        });
+    </script>
 
 </body>
 
