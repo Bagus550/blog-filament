@@ -194,11 +194,10 @@
         /* --- Tables --- */
         .prose-content table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
+            border-collapse: collapse;
             margin: 1.5rem 0;
             font-size: 0.9375rem;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #cbd5e1;
             border-radius: 0.75rem;
             overflow: hidden;
         }
@@ -215,12 +214,12 @@
             color: #1e293b;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            border-bottom: 2px solid #cbd5e1;
+            border: 1px solid #cbd5e1;
         }
 
         .prose-content tbody td {
             padding: 0.75rem 1rem;
-            border-bottom: 1px solid #f1f5f9;
+            border: 1px solid #e2e8f0;
             color: #475569;
             vertical-align: top;
         }
