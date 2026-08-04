@@ -344,7 +344,7 @@
 
                     <div class="space-y-4 sm:space-y-6">
                         @foreach($sidebarPosts ?? [] as $post)
-                        {{-- @var $post \App\Models\Post --}}
+                        @php /** @var \App\Models\Post $post */ @endphp
                         <a href="{{ route('blog.show', $post->slug) }}" class="flex items-center space-x-3 sm:space-x-4 group">
                             <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-slate-100 shrink-0 overflow-hidden shadow-inner">
                                 <img src="{{ $post->thumbnail_url }}"
