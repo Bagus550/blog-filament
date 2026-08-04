@@ -20,50 +20,259 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        /* Custom styles for rich editor output inside paragraph blocks */
-        .prose-content p {
-            margin-bottom: 1.25rem;
-            line-height: 1.8;
+        /* ==============================================
+           PROSE CONTENT — Full styling for Filament
+           RichEditor HTML output (tables, blockquotes,
+           headings, links, etc.)
+           ============================================== */
+
+        /* --- Base text --- */
+        .prose-content {
+            font-size: 1.0625rem;
+            line-height: 1.85;
             color: #334155;
         }
 
+        .prose-content > *:first-child {
+            margin-top: 0;
+        }
+
+        .prose-content p {
+            margin-bottom: 1.25rem;
+            line-height: 1.85;
+            color: #334155;
+        }
+
+        /* --- Headings (from RichEditor toolbar) --- */
+        .prose-content h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+            letter-spacing: -0.025em;
+        }
+
+        .prose-content h2 {
+            font-size: 1.625rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 2.25rem;
+            margin-bottom: 0.875rem;
+            line-height: 1.35;
+            letter-spacing: -0.02em;
+        }
+
+        .prose-content h3 {
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .prose-content h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-top: 1.75rem;
+            margin-bottom: 0.625rem;
+            line-height: 1.45;
+        }
+
+        .prose-content h5,
+        .prose-content h6 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #334155;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        /* --- Links --- */
+        .prose-content a {
+            color: #4f46e5;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            text-decoration-color: #a5b4fc;
+            font-weight: 500;
+            transition: color 0.15s, text-decoration-color 0.15s;
+        }
+
+        .prose-content a:hover {
+            color: #3730a3;
+            text-decoration-color: #4f46e5;
+        }
+
+        /* --- Bold / Italic / Strikethrough --- */
+        .prose-content strong {
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .prose-content em {
+            font-style: italic;
+        }
+
+        .prose-content s,
+        .prose-content del {
+            text-decoration: line-through;
+            color: #94a3b8;
+        }
+
+        /* --- Lists --- */
         .prose-content ul {
             list-style-type: disc !important;
-            padding-left: 1.5rem !important;
+            padding-left: 1.625rem !important;
             margin-top: 0.75rem !important;
             margin-bottom: 1.25rem !important;
         }
 
         .prose-content ol {
             list-style-type: decimal !important;
-            padding-left: 1.5rem !important;
+            padding-left: 1.625rem !important;
             margin-top: 0.75rem !important;
             margin-bottom: 1.25rem !important;
         }
 
         .prose-content li {
             margin-bottom: 0.5rem !important;
-            line-height: 1.7;
+            line-height: 1.75;
+            color: #334155;
         }
 
+        .prose-content li > ul,
+        .prose-content li > ol {
+            margin-top: 0.375rem !important;
+            margin-bottom: 0.375rem !important;
+        }
+
+        .prose-content ul ul {
+            list-style-type: circle !important;
+        }
+
+        .prose-content ul ul ul {
+            list-style-type: square !important;
+        }
+
+        /* --- Blockquote (from RichEditor) --- */
+        .prose-content blockquote {
+            border-left: 4px solid #6366f1;
+            background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+            border-radius: 0 0.75rem 0.75rem 0;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: #475569;
+            position: relative;
+        }
+
+        .prose-content blockquote::before {
+            content: '\201C';
+            font-family: Georgia, serif;
+            font-size: 3.5rem;
+            color: #c7d2fe;
+            position: absolute;
+            top: -0.25rem;
+            left: 0.5rem;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .prose-content blockquote p {
+            margin-bottom: 0.5rem;
+            color: #475569;
+        }
+
+        .prose-content blockquote p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* --- Tables --- */
+        .prose-content table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1.5rem 0;
+            font-size: 0.9375rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        .prose-content thead {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+
+        .prose-content thead th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.8125rem;
+            color: #1e293b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid #cbd5e1;
+        }
+
+        .prose-content tbody td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            color: #475569;
+            vertical-align: top;
+        }
+
+        .prose-content tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .prose-content tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .prose-content tbody tr:nth-child(even) {
+            background-color: #fafbfd;
+        }
+
+        .prose-content tbody tr:nth-child(even):hover {
+            background-color: #f1f5f9;
+        }
+
+        /* --- Horizontal Rule --- */
+        .prose-content hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #cbd5e1 20%, #cbd5e1 80%, transparent);
+            margin: 2rem 0;
+        }
+
+        /* --- Inline Code --- */
         .prose-content code {
             background-color: #f1f5f9;
             color: #4f46e5;
-            padding: 0.15rem 0.4rem;
+            padding: 0.2rem 0.45rem;
             border-radius: 0.375rem;
-            font-family: monospace;
-            font-size: 0.875em;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.85em;
+            border: 1px solid #e2e8f0;
+            font-weight: 500;
         }
 
+        /* --- Code Blocks --- */
         .prose-content pre {
             background-color: #0f172a;
             color: #e2e8f0;
-            padding: 1.25rem;
+            padding: 1.25rem 1.5rem;
             border-radius: 0.75rem;
             overflow-x: auto;
             margin-top: 1rem;
             margin-bottom: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border: 1px solid #1e293b;
+            line-height: 1.7;
         }
 
         .prose-content pre code {
@@ -71,7 +280,47 @@
             color: inherit;
             padding: 0;
             border-radius: 0;
-            font-size: 0.9em;
+            font-size: 0.875em;
+            border: none;
+            font-weight: 400;
+        }
+
+        /* --- Images inside RichEditor content --- */
+        .prose-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.75rem;
+            margin: 1.25rem 0;
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
+        }
+
+        /* --- Subscript / Superscript --- */
+        .prose-content sub {
+            font-size: 0.75em;
+            vertical-align: sub;
+        }
+
+        .prose-content sup {
+            font-size: 0.75em;
+            vertical-align: super;
+        }
+
+        /* --- Responsive table scroll on mobile --- */
+        @media (max-width: 640px) {
+            .prose-content table {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                white-space: nowrap;
+            }
+
+            .prose-content blockquote {
+                padding: 1rem 1.25rem;
+            }
+
+            .prose-content h1 { font-size: 1.625rem; }
+            .prose-content h2 { font-size: 1.375rem; }
+            .prose-content h3 { font-size: 1.1875rem; }
         }
 
         /* Mobile menu transition */
