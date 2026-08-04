@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\Project;
 
 class BlogController extends Controller
 {
@@ -40,6 +41,12 @@ class BlogController extends Controller
 
         $categories = ['Ensiklopedia', 'Fakta Unik', 'Info Menarik'];
 
+        // Ambil project unggulan / publik
+        $featuredProjects = Project::where('is_featured', true)->latest()->take(3)->get();
+        if ($featuredProjects->isEmpty()) {
+            $featuredProjects = Project::latest()->take(3)->get();
+        }
+
         return view('blog.index', compact(
             'tutorialPosts',
             'featuredPost',
@@ -48,7 +55,8 @@ class BlogController extends Controller
             'sidebarPosts',
             'selectedCategory',
             'searchQuery',
-            'categories'
+            'categories',
+            'featuredProjects'
         ));
     }
 

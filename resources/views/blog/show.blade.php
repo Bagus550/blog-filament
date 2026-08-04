@@ -111,6 +111,11 @@
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
                 </a>
 
+                <a href="{{ route('projects.index') }}" class="hover:text-indigo-600 transition duration-200 relative group">
+                    Project & Aplikasi
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
+                </a>
+
                 @if(isset($categories))
                 @foreach($categories as $categoryName)
                 <a href="{{ route('blog.index', ['category' => $categoryName]) }}"

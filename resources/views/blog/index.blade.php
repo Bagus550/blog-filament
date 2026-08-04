@@ -76,6 +76,12 @@
                     <span class="absolute bottom-0 left-0 {{ empty($selectedCategory) ? 'w-full' : 'w-0' }} h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
                 </a>
 
+                <a href="{{ route('projects.index') }}"
+                    class="hover:text-indigo-600 transition duration-200 relative group">
+                    Project & Aplikasi
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
+                </a>
+
                 @php
                 $catList = $categories ?? ['Ensiklopedia', 'Fakta Unik', 'Info Menarik'];
                 @endphp
@@ -98,7 +104,7 @@
                     @endif
                     <input type="text" name="search" value="{{ $searchQuery ?? '' }}" placeholder="Cari artikel..."
                         class="w-32 sm:w-48 md:w-56 text-xs bg-slate-100 text-slate-700 pl-3 pr-8 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all">
-                    <button type="submit" class="absolute right-2 p-1 text-slate-400 hover:text-indigo-600 transition" aria-label="Search">
+                    <button type="submit" class="absolute right-2 text-slate-400 hover:text-indigo-600" aria-label="Search">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
@@ -123,6 +129,10 @@
             <a href="{{ route('blog.index') }}"
                 class="block py-2.5 px-3 rounded-xl text-sm font-semibold {{ empty($selectedCategory) ? 'text-indigo-600 bg-indigo-50' : 'text-slate-700 hover:bg-slate-50' }} transition">
                 Beranda
+            </a>
+            <a href="{{ route('projects.index') }}"
+                class="block py-2.5 px-3 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
+                Project & Aplikasi
             </a>
             @foreach($catList as $categoryName)
             <a href="{{ route('blog.index', array_filter(['category' => $categoryName])) }}"
@@ -219,6 +229,60 @@
             </div>
             @endif
 
+        </section>
+        @endif
+
+        <!-- FEATURED PROJECTS SHOWCASE SECTION (SEKSI PROJECT & APLIKASI) -->
+        @if(isset($featuredProjects) && $featuredProjects->count() > 0)
+        <section class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 relative z-10 border-b border-slate-800 pb-4">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span class="text-indigo-400 text-xs font-bold uppercase tracking-wider">Public Tools & Showcase</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Project & Aplikasi Publik</h2>
+                </div>
+                <a href="{{ route('projects.index') }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-300 hover:text-white bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition border border-white/10 shrink-0">
+                    <span>Lihat Semua Project</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+                @foreach($featuredProjects as $project)
+                <div class="bg-slate-800/80 hover:bg-slate-800 border border-slate-700/70 rounded-2xl p-4 flex flex-col justify-between transition duration-300 hover:-translate-y-1 group">
+                    <div>
+                        <div class="overflow-hidden rounded-xl aspect-video bg-slate-900 relative mb-3">
+                            <img src="{{ $project->thumbnail_url }}" alt="{{ $project->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <span class="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-500 text-white shadow">
+                                {{ $project->status }}
+                            </span>
+                        </div>
+                        <h3 class="font-bold text-white group-hover:text-indigo-300 transition text-base line-clamp-1 mb-1">
+                            <a href="{{ route('projects.show', $project->slug) }}">{{ $project->title }}</a>
+                        </h3>
+                        <p class="text-slate-400 text-xs line-clamp-2 mb-3">
+                            {{ $project->excerpt }}
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-700/50 text-xs">
+                        <a href="{{ route('projects.show', $project->slug) }}" class="text-indigo-300 hover:text-white font-semibold">
+                            Detail →
+                        </a>
+                        @if(!empty($project->demo_url))
+                        <a href="{{ $project->demo_url }}" target="_blank" rel="noopener noreferrer" class="bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold px-3 py-1 rounded-lg transition">
+                            Coba App
+                        </a>
+                        @endif
+                    </div>
+                </div>
+                @endforeach
+            </div>
         </section>
         @endif
 
