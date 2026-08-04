@@ -5,6 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BagusdevBlog - Insight, Web Dev & Tech Tutorials</title>
+    <meta name="description" content="BagusdevBlog - Platform tutorial web development, sains, teknologi, fakta unik, dan wawasan menarik.">
+
+    <!-- Open Graph / Facebook / WhatsApp / Telegram -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="BagusdevBlog - Insight, Web Dev & Tech Tutorials">
+    <meta property="og:description" content="Platform tutorial web development, sains, teknologi, fakta unik, dan wawasan menarik.">
+    <meta property="og:image" content="{{ asset('images/logo.png') }}">
+    <meta property="og:site_name" content="BagusdevBlog">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="BagusdevBlog - Insight, Web Dev & Tech Tutorials">
+    <meta name="twitter:description" content="Platform tutorial web development, sains, teknologi, fakta unik, dan wawasan menarik.">
+    <meta name="twitter:image" content="{{ asset('images/logo.png') }}">
 
     <!-- CDN Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>

@@ -5,6 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $project->title }} - Project & Aplikasi Bagusdev</title>
+    <meta name="description" content="{{ $project->excerpt }}">
+
+    <!-- Open Graph / Facebook / WhatsApp / Telegram -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="{{ $project->title }}">
+    <meta property="og:description" content="{{ $project->excerpt }}">
+    <meta property="og:image" content="{{ $project->thumbnail_url }}">
+    <meta property="og:site_name" content="BagusdevBlog">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="{{ $project->title }}">
+    <meta name="twitter:description" content="{{ $project->excerpt }}">
+    <meta name="twitter:image" content="{{ $project->thumbnail_url }}">
 
     <!-- CDN Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
